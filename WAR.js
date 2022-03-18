@@ -12,7 +12,7 @@
 // Ties result in zero points for either Player
 // After all cards have been played, display the score.
 
-alert("It's WAR!")
+
 
 class Card {
     constructor(card, value, suit) {
@@ -136,13 +136,10 @@ while(p1.hand.length > 0) {
 
 if(p1.score > p2.score) {
     console.log(`${p1.name} wins WAR! Score: ${p1.score}-${p2.score}`) 
-    alert(`${p1.name} wins WAR! Score: ${p1.score}-${p2.score}`)
 } else if(p1.score < p2.score) {
     console.log(`${p2.name} wins WAR! Score: ${p2.score}-${p1.score}`)
-    alert(`${p2.name} wins WAR! Score: ${p2.score}-${p1.score}`)
 }else {
     console.log("It's a tie!");
-    alert("It's a tie!");
 }
 
 
