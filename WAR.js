@@ -1,102 +1,128 @@
-const SUITS = ['♠', '♣', '♥', '♦'];
-const VALUES = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-const valuesList = {
-    '2': 2, 
-    '3': 3,
-    '4': 4,
-    '5': 5,
-    '6': 6,
-    '7': 7,
-    '8': 8,
-    '9': 9,
-    '10': 10,
-    'J': 11,
-    'Q': 12,
-    'K': 13,
-    'A': 14
+class Card {
+    constructor(card, value, suit) {
+        this.card = card;
+        this.value = value;
+        this.suit = suit;
+    }   
+    showCard() {
+        console.log(`${this.value} ${this.suit} `);
+    }
 }
 
-class Card {
-    constructor(suit, value) {
-        this.suit = suit;
-        this.value = value;
-    }    
-}
+
 
 class Player {
+    hand = [];
+    name
+    score = 0
     constructor(name) {
         this.name = name;
-        this.playerHand = [];
-        this.playerScore = 0;
     }
-    addDeck(deck) {
-        this.playerHand = deck;
+    setHand(hand) {
+        this.hand = hand;
+    }
+    playTopCard() {
+    return this.hand.shift();
     }
 }
 
 class Deck {
-    constructor (cards = freshNewDeck()) {
-        this.cards = cards;
+        deck = [];
+        suits = ['♠', '♣', '♥', '♦'];
+        cards = {
+            '2': 2, 
+            '3': 3,
+            '4': 4,
+            '5': 5,
+            '6': 6,
+            '7': 7,
+            '8': 8,
+            '9': 9,
+            '10': 10,
+            'J': 11,
+            'Q': 12,
+            'K': 13,
+            'A': 14,
         }
-        shuffle() {
-            for(let i = this.cards.length - 1; i > 0; i--) {
-            const newCard = Math.floor(Math.random() * i);
-            const oldCard = this.cards[newCard];
-            this.cards[newCard] = this.cards[i];
-            this.cards[i] = oldCard;
-       }
-   }
-}
-function freshNewDeck() {
-    return SUITS.flatMap(suit => {
-        return VALUES.map(value => {
-            return new Card(suit,value);
-        });
-    });
-}
-
-
-function splitDeck() {
-    let player1Deck = new Deck();
-    let player2Deck = new Deck();
-    for(let i=0; i<this.cards.length; i++) {
-        player1Deck.playerHand.slice(0, splitDeck);
-        player2Deck.playerHand.slice(splitDeck, this.cards.length);
-    }
-    return splitDeck();
-}
-
-
-function playersResults(player1, player2) {
-    for(let i = 0; i < player1.playerHand.length; i++) {
-        if(valuesList[player1.playerHand[i].value] > valuesList[player2.playerHand[i].value]) {
-            player1.playerScore += 1;
-            console.log(`${player1.name} won this turn!`);
-        }else if (valuesList[player1.playerHand[i].value] < valuesList[player2.playerHand[i].value]) {
-            player2.playerScore += 1;
-            console.log(`${player2.name} won this turn!`);
-        }else {
-            console.log('It is a tie! 0 points');
+        constructor() {
+            this.fullDeck();
         }
+        fullDeck() {
+             this.suits.forEach(suit => {
+                for(let c in this.cards){
+                    this.deck.push(new Card(c, this.cards[c], suit));
+            };
+        })
+        this.deck = shuffle(this.deck)
+    }
+        shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while(currentIndex != 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+
+            [array[currentIndex], array[randomIndex]] = [
+                array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+
+    splitDeck() {
+        let newArr = shuffle(this.deck)
+        let halfDeck = Math.ceil(this.deck.length / 2);
+        let otherDeck = this.deck.splice(0, halfDeck);
+        return [otherDeck, this.deck]
     }
 }
+    
+ 
 
-function finalScore(player1, player2) {
-    if(player1.playerScore > player2.playerScore) {
-        console.log(`${player1.name} won the game of WAR with: ${player1.playerScore} `) 
-    } else if(player1.playerScore < player2.playerScore) {
-        console.log(`${player2.name} won the game of WAR with: ${player2.playerScore} `)
+    ///////////
+    // GAME //
+    ///////////
+//make deck of cards
+let mainDeck = new Deck();
+
+//2 players
+let p1 = new Player('Sam');
+let p2 = new Player('Tom')
+
+//deal 26 cards to each player
+let(left, right) = mainDeck.splitDeck()
+p1.setHand(left)
+p2.setHand(right)
+console.log()
+
+//loop for turns
+while(p1.hand.length > 0) {
+    //players take turns
+    let p1Card = p1.playTopCard()
+    let p2Card = p2.playTopCard()
+    if(p1Card.value > p2Card.value) {
+        p1.score++
+    }else if(p1Card.value < p2Card.value) {
+        p2.score++
+    }
+    console.log()
+}
+
+
+function finalScore(p1, p2) {
+    if(p1.score > p2.score) {
+        console.log(`${p1.name} wins WAR! Score: ${p1.score}-${p2.score} `) 
+    } else if(p1.score < p2.score) {
+        console.log(`${p2.name} wins WAR! Score: ${p2.score}-${p1.score} `)
     }else {
-        console.log(`${player1.name} and ${player2.name} finished on a tie!`);
+        console.log("It's a tie!");
     }
 }
 
-let newDeck = new Deck();
-console.log(newDeck);
 
 
 
 
 
-//create game for loop that runs for 26 turns in a loop
-//deal the cards to 2 players (splitDeck)
+
+
+
