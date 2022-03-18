@@ -12,7 +12,7 @@
 // Ties result in zero points for either Player
 // After all cards have been played, display the score.
 
-
+alert("It's WAR!")
 
 class Card {
     constructor(card, value, suit) {
@@ -24,8 +24,6 @@ class Card {
         console.log(`${this.value} ${this.suit} `);
     }
 }
-
-
 
 class Player {
     hand = [];
@@ -40,52 +38,63 @@ class Player {
     playTopCard() {
     return this.hand.shift();
     }
+    toString() {
+        return this.name;
+    }
 }
 
-class Deck {
-        deck = [];
-        suits = ['♠', '♣', '♥', '♦'];
-        cards = {
-            '2': 2, 
-            '3': 3,
-            '4': 4,
-            '5': 5,
-            '6': 6,
-            '7': 7,
-            '8': 8,
-            '9': 9,
-            '10': 10,
-            'J': 11,
-            'Q': 12,
-            'K': 13,
-            'A': 14,
-        }
-        constructor() {
-            this.fullDeck();
-        }
-        fullDeck() {
-             this.suits.forEach(suit => {
-                for(let c in this.cards){
-                    this.deck.push(new Card(c, this.cards[c], suit));
-            };
-        })
-        this.deck = shuffle(this.deck)
-    }
-        shuffle(array) {
-        let currentIndex = array.length, randomIndex;
-        while(currentIndex != 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
+//create 2 players
+let p1 = new Player('Glennys');
+let p2 = new Player('Isabel');
+console.log(p1, p2);
 
+    //shuffle deck function/method 
+function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+        while(currentIndex != 0) {
+            //chooses remaining cards
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+            //swaps cards with current card
             [array[currentIndex], array[randomIndex]] = [
-                array[randomIndex], array[currentIndex]];
+            array[randomIndex], array[currentIndex]];
         }
+
         return array;
     }
 
 
+class Deck {
+    deck = [];
+    suits = ['♠', '♣', '♥', '♦'];
+    cards = {
+        '2': 2, 
+        '3': 3,
+        '4': 4,
+        '5': 5,
+        '6': 6,
+        '7': 7,
+        '8': 8,
+        '9': 9,
+        '10': 10,
+        'J': 11,
+        'Q': 12,
+        'K': 13,
+        'A': 14,
+    }
+    constructor() {
+        this.fullDeck();
+    }
+    fullDeck() {
+        this.suits.forEach(suit => {
+           for(let c in this.cards){
+              this.deck.push(new Card(c,this.cards[c], suit));
+            };
+        })
+        this.deck = shuffle(this.deck)
+    }
+
     splitDeck() {
-        let newArr = shuffle(this.deck)
         let halfDeck = Math.ceil(this.deck.length / 2);
         let otherDeck = this.deck.splice(0, halfDeck);
         return [otherDeck, this.deck]
@@ -93,22 +102,18 @@ class Deck {
 }
     
  
-
-    ///////////
-    // GAME //
-    ///////////
 //make deck of cards
 let mainDeck = new Deck();
+//console.log(mainDeck);
 
-//2 players
-let p1 = new Player('Sam');
-let p2 = new Player('Tom')
 
 //deal 26 cards to each player
-let(left, right) = mainDeck.splitDeck()
+let [left, right] = mainDeck.splitDeck();
 p1.setHand(left)
 p2.setHand(right)
-console.log()
+
+console.log(`${p1.name} and ${p2.name} have their deck of 26 cards.`)
+console.log(p1.hand, p2.hand);
 
 //loop for turns
 while(p1.hand.length > 0) {
@@ -117,22 +122,31 @@ while(p1.hand.length > 0) {
     let p2Card = p2.playTopCard()
     if(p1Card.value > p2Card.value) {
         p1.score++
+        console.log(`${p1.name} scored!`)
     }else if(p1Card.value < p2Card.value) {
         p2.score++
+        console.log(`${p2.name} scored!`)
+    }else{
+        console.log("Tie!")
     }
-    console.log()
+    
+}
+
+//Final score output
+
+if(p1.score > p2.score) {
+    console.log(`${p1.name} wins WAR! Score: ${p1.score}-${p2.score}`) 
+    alert(`${p1.name} wins WAR! Score: ${p1.score}-${p2.score}`)
+} else if(p1.score < p2.score) {
+    console.log(`${p2.name} wins WAR! Score: ${p2.score}-${p1.score}`)
+    alert(`${p2.name} wins WAR! Score: ${p2.score}-${p1.score}`)
+}else {
+    console.log("It's a tie!");
+    alert("It's a tie!");
 }
 
 
-function finalScore(p1, p2) {
-    if(p1.score > p2.score) {
-        console.log(`${p1.name} wins WAR! Score: ${p1.score}-${p2.score} `) 
-    } else if(p1.score < p2.score) {
-        console.log(`${p2.name} wins WAR! Score: ${p2.score}-${p1.score} `)
-    }else {
-        console.log("It's a tie!");
-    }
-}
+
 
 
 
